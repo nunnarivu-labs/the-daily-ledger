@@ -5,10 +5,11 @@ import * as schema from "./schema";
 import { v4 as uuid } from "uuid";
 
 // --- Configuration ---
-const USERS_TO_CREATE = 5000;
-const PRODUCTS_TO_CREATE = 100;
-const ORDERS_TO_CREATE = 1_000_000;
-const BATCH_SIZE = 1000;
+const USERS_TO_CREATE = 50_000;
+const PRODUCTS_TO_CREATE = 500;
+const ORDERS_TO_CREATE = 10_000_000;
+const MEMORY_BATCH_SIZE = 10000;
+const DB_CHUNK_SIZE = 500; // A safe chunk size for all large inserts
 
 async function main() {
   console.log("Seeding database with Drizzle...");
@@ -21,6 +22,7 @@ async function main() {
   await db.delete(schema.users);
 
   // --- 2. Seed Products ---
+  // This is a small enough number that it doesn't need chunking.
   console.log(`Creating ${PRODUCTS_TO_CREATE} products...`);
   const productsData: (typeof schema.products.$inferInsert)[] = [];
   for (let i = 0; i < PRODUCTS_TO_CREATE; i++) {
@@ -31,8 +33,8 @@ async function main() {
         "Equipment",
         "Merchandise",
       ]),
-      price: faker.commerce.price({ min: 15, max: 200, dec: 5 }),
-      cost: faker.commerce.price({ min: 5, max: 100, dec: 5 }),
+      price: faker.commerce.price({ min: 15, max: 200 }),
+      cost: faker.commerce.price({ min: 5, max: 100 }),
       stock: faker.number.int({ min: 0, max: 200 }),
       imageUrl: faker.image.url(),
     });
@@ -42,33 +44,42 @@ async function main() {
     .values(productsData)
     .returning();
 
-  // --- 3. Seed Users ---
-  console.log(`Creating ${USERS_TO_CREATE} users...`);
+  // --- 3. Seed Users with Chunking ---
+  console.log(`Creating ${USERS_TO_CREATE} users in memory...`);
   const usersData: (typeof schema.users.$inferInsert)[] = [];
   for (let i = 0; i < USERS_TO_CREATE; i++) {
     const firstName = faker.person.firstName();
     const lastName = faker.person.lastName();
-
     usersData.push({
       firstName,
       lastName,
-      email: faker.internet.email({ firstName, lastName: `${lastName}-${i}` }),
+      email: faker.internet.email({ firstName, lastName: `${lastName}${i}` }),
     });
   }
-  const createdUsers = await db
-    .insert(schema.users)
-    .values(usersData)
-    .returning();
 
-  // --- 4. Seed Orders and Order Items in Batches ---
   console.log(
-    `Creating ${ORDERS_TO_CREATE} orders in batches of ${BATCH_SIZE}...`,
+    `  Inserting ${USERS_TO_CREATE} users into DB in chunks of ${DB_CHUNK_SIZE}...`,
   );
-  for (let i = 0; i < ORDERS_TO_CREATE / BATCH_SIZE; i++) {
+  for (let i = 0; i < usersData.length; i += DB_CHUNK_SIZE) {
+    const chunk = usersData.slice(i, i + DB_CHUNK_SIZE);
+    await db.insert(schema.users).values(chunk);
+  }
+
+  // After all users are inserted, fetch them back to get their generated IDs
+  console.log("Fetching all created users...");
+  const createdUsers = await db.select().from(schema.users);
+
+  // --- 4. Seed Orders and Order Items with Chunking ---
+  console.log(
+    `Creating ${ORDERS_TO_CREATE} orders in memory batches of ${MEMORY_BATCH_SIZE}...`,
+  );
+  const totalBatches = ORDERS_TO_CREATE / MEMORY_BATCH_SIZE;
+
+  for (let i = 0; i < totalBatches; i++) {
     const ordersBatch: (typeof schema.orders.$inferInsert)[] = [];
     const orderItemsBatch: (typeof schema.orderItems.$inferInsert)[] = [];
 
-    for (let j = 0; j < BATCH_SIZE; j++) {
+    for (let j = 0; j < MEMORY_BATCH_SIZE; j++) {
       const randomUser = faker.helpers.arrayElement(createdUsers);
       const orderId = uuid();
       let totalAmount = 0;
@@ -98,18 +109,27 @@ async function main() {
           "Cancelled",
         ]),
         totalAmount: totalAmount.toString(),
-        createdAt: faker.date.past({ years: 2 }),
+        createdAt: faker.date.past({ years: 3 }),
       });
     }
 
-    await db.insert(schema.orders).values(ordersBatch);
-    await db.insert(schema.orderItems).values(orderItemsBatch);
+    console.log(
+      `  Inserting memory batch ${i + 1}/${totalBatches} into DB in chunks of ${DB_CHUNK_SIZE}...`,
+    );
+    for (let k = 0; k < ordersBatch.length; k += DB_CHUNK_SIZE) {
+      const chunk = ordersBatch.slice(k, k + DB_CHUNK_SIZE);
+      await db.insert(schema.orders).values(chunk);
+    }
 
-    console.log(`Batch ${i + 1} of ${ORDERS_TO_CREATE / BATCH_SIZE} complete.`);
+    for (let k = 0; k < orderItemsBatch.length; k += DB_CHUNK_SIZE) {
+      const chunk = orderItemsBatch.slice(k, k + DB_CHUNK_SIZE);
+      await db.insert(schema.orderItems).values(chunk);
+    }
+
+    console.log(`Memory batch ${i + 1} of ${totalBatches} complete.`);
   }
 
   console.log("Seeding complete!");
-  // Drizzle doesn't require an explicit disconnect, so we can exit.
   process.exit(0);
 }
 
