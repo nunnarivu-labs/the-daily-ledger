@@ -12,9 +12,11 @@
     "db:push": "npx drizzle-kit push",
     "docker:start": "docker-compose up -d",
     "docker:stop": "docker-compose down",
+    "docker:stop:erase": "docker-compose down -v",
     "db:seed": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' db/seed.ts"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
@@ -29,6 +31,7 @@
   "devDependencies": {
     "@faker-js/faker": "^10.1.0",
     "@tailwindcss/postcss": "^4",
+    "@tanstack/eslint-plugin-query": "^5.91.2",
     "@types/node": "^20",
     "@types/pg": "^8.15.6",
     "@types/react": "^19",
