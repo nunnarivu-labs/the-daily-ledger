@@ -46,10 +46,13 @@ async function main() {
   console.log(`Creating ${USERS_TO_CREATE} users...`);
   const usersData: (typeof schema.users.$inferInsert)[] = [];
   for (let i = 0; i < USERS_TO_CREATE; i++) {
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
+
     usersData.push({
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      email: faker.internet.email(),
+      firstName,
+      lastName,
+      email: faker.internet.email({ firstName, lastName: `${lastName}-${i}` }),
     });
   }
   const createdUsers = await db
