@@ -1,8 +1,8 @@
-import "dotenv/config";
-import { faker } from "@faker-js/faker";
-import { db } from "./index";
-import * as schema from "./schema";
-import { v4 as uuid } from "uuid";
+import 'dotenv/config';
+import { faker } from '@faker-js/faker';
+import { db } from './index';
+import * as schema from './schema';
+import { v4 as uuid } from 'uuid';
 
 // --- Configuration ---
 const USERS_TO_CREATE = 50_000;
@@ -12,10 +12,10 @@ const MEMORY_BATCH_SIZE = 10000;
 const DB_CHUNK_SIZE = 500; // A safe chunk size for all large inserts
 
 async function main() {
-  console.log("Seeding database with Drizzle...");
+  console.log('Seeding database with Drizzle...');
 
   // --- 1. Clear Existing Data ---
-  console.log("Clearing existing data...");
+  console.log('Clearing existing data...');
   await db.delete(schema.orderItems);
   await db.delete(schema.orders);
   await db.delete(schema.products);
@@ -29,9 +29,9 @@ async function main() {
     productsData.push({
       name: faker.commerce.productName(),
       category: faker.helpers.arrayElement([
-        "Coffee Beans",
-        "Equipment",
-        "Merchandise",
+        'Coffee Beans',
+        'Equipment',
+        'Merchandise',
       ]),
       price: faker.commerce.price({ min: 15, max: 200 }),
       cost: faker.commerce.price({ min: 5, max: 100 }),
@@ -66,7 +66,7 @@ async function main() {
   }
 
   // After all users are inserted, fetch them back to get their generated IDs
-  console.log("Fetching all created users...");
+  console.log('Fetching all created users...');
   const createdUsers = await db.select().from(schema.users);
 
   // --- 4. Seed Orders and Order Items with Chunking ---
@@ -103,10 +103,10 @@ async function main() {
         id: orderId,
         userId: randomUser.id,
         status: faker.helpers.arrayElement([
-          "Pending",
-          "Shipped",
-          "Delivered",
-          "Cancelled",
+          'Pending',
+          'Shipped',
+          'Delivered',
+          'Cancelled',
         ]),
         totalAmount: totalAmount.toString(),
         createdAt: faker.date.past({ years: 3 }),
@@ -129,11 +129,11 @@ async function main() {
     console.log(`Memory batch ${i + 1} of ${totalBatches} complete.`);
   }
 
-  console.log("Seeding complete!");
+  console.log('Seeding complete!');
   process.exit(0);
 }
 
 main().catch((err) => {
-  console.error("Seeding failed:", err);
+  console.error('Seeding failed:', err);
   process.exit(1);
 });
