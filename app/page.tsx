@@ -1,3 +1,5 @@
+'use client';
+
 import { AppSidebar } from '@/components/app-sidebar';
 import { ChartAreaInteractive } from '@/components/chart-area-interactive';
 import { SectionCards } from '@/components/section-cards';
@@ -5,8 +7,24 @@ import { SiteHeader } from '@/components/site-header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import * as React from 'react';
 import { DateRangePicker } from '@/components/date-range-picker';
+import { redirect, useSearchParams } from 'next/navigation';
+import { endOfDay, subDays } from 'date-fns';
 
-export default async function Page() {
+export default function Page() {
+  const params = useSearchParams();
+
+  if (!params.has('from') || !params.has('to')) {
+    const today = endOfDay(new Date());
+    const threeMonthsAgo = subDays(today, 90);
+
+    const newSearchParams = new URLSearchParams({
+      from: threeMonthsAgo.getTime().toString(),
+      to: today.getTime().toString(),
+    });
+
+    return redirect(`?${newSearchParams}`);
+  }
+
   return (
     <SidebarProvider
       style={

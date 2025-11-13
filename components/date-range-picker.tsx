@@ -9,9 +9,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import { format, subDays } from 'date-fns';
+import { format, subDays, differenceInDays, endOfDay } from 'date-fns';
 import {
   Popover,
   PopoverContent,
@@ -24,44 +24,77 @@ import { Calendar } from '@/components/ui/calendar';
 
 type ActivePreset = '90d' | '30d' | '7d' | 'custom';
 
+const today = endOfDay(new Date());
+
+function getActivePreset(date: DateRange): ActivePreset {
+  if (!date.from || !date.to) return 'custom';
+  const interval = differenceInDays(date.to, date.from);
+
+  if (interval === undefined) return 'custom';
+
+  switch (interval) {
+    case 90:
+      return '90d';
+    case 30:
+      return '30d';
+    case 7:
+      return '7d';
+    default:
+      return 'custom';
+  }
+}
+
 export function DateRangePicker() {
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: subDays(new Date(), 90),
-    to: new Date(),
+  const [dateRange, setDateRange] = useState<DateRange>({
+    from: subDays(today, 90),
+    to: today,
   });
 
-  const [activePreset, setActivePreset] = useState<ActivePreset>('90d');
-
-  useEffect(() => {
-    const today = new Date();
-
-    switch (activePreset) {
-      case '90d':
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setDate({ from: subDays(today, 90), to: today });
-        break;
-      case '30d':
-        setDate({ from: subDays(today, 30), to: today });
-        break;
-      case '7d':
-        setDate({ from: subDays(today, 7), to: today });
-        break;
-      default:
-        break;
-    }
-  }, [activePreset]);
+  const [activePreset, setActivePreset] = useState<ActivePreset>(
+    getActivePreset({ from: dateRange.from, to: dateRange.to }),
+  );
 
   const handleDateSelect = (newDate: DateRange | undefined) => {
-    setDate(newDate);
-    setActivePreset('custom');
+    if (!newDate?.from || !newDate?.to) return;
+
+    const nextDate: DateRange = {
+      from: newDate.from,
+      to: endOfDay(newDate.to),
+    };
+
+    setDateRange(nextDate);
+    setActivePreset(getActivePreset(nextDate));
   };
+
+  const handleActivePresetSelect = useCallback(
+    (newActivePreset: ActivePreset) => {
+      setActivePreset(newActivePreset);
+
+      switch (newActivePreset) {
+        case '90d':
+          setDateRange({ from: subDays(today, 90), to: today });
+          break;
+        case '30d':
+          setDateRange({ from: subDays(today, 30), to: today });
+          break;
+        case '7d':
+          setDateRange({ from: subDays(today, 7), to: today });
+          break;
+        default:
+          break;
+      }
+    },
+    [],
+  );
 
   return (
     <div className="flex flex-col items-end gap-2 md:flex-row md:flex-wrap md:items-center md:justify-end">
       <ToggleGroup
         type="single"
         value={activePreset}
-        onValueChange={(preset) => setActivePreset(preset as ActivePreset)}
+        onValueChange={(preset) =>
+          handleActivePresetSelect(preset as ActivePreset)
+        }
         variant="outline"
         className="hidden md:flex"
       >
@@ -104,29 +137,36 @@ export function DateRangePicker() {
             className={cn(
               'w-[260px] justify-start text-left font-normal',
               'w-full md:w-[260px]',
-              !date && 'text-muted-foreground',
+              !dateRange && 'text-muted-foreground',
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date?.from ? (
-              date.to ? (
+            {dateRange?.from ? (
+              dateRange.to ? (
                 <>
-                  {format(date.from, 'LLL dd, y')} -{' '}
-                  {format(date.to, 'LLL dd, y')}
+                  {format(dateRange.from, 'LLL dd, y')} -{' '}
+                  {format(dateRange.to, 'LLL dd, y')}
                 </>
               ) : (
-                format(date.from, 'LLL dd, y')
+                format(dateRange.from, 'LLL dd, y')
               )
             ) : (
               <span>Pick a date</span>
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="end">
+        <PopoverContent
+          className="w-auto p-0"
+          align="end"
+          onBlur={() => {
+            console.log('Hello World');
+          }}
+        >
           <Calendar
+            today={today}
             mode="range"
-            defaultMonth={date?.from}
-            selected={date}
+            defaultMonth={dateRange?.from}
+            selected={dateRange}
             onSelect={handleDateSelect}
             numberOfMonths={2}
             className="rounded-lg border shadow-sm"

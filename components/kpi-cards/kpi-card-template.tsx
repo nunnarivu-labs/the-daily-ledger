@@ -9,7 +9,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { IconTrendingDown } from '@tabler/icons-react';
 
-export function KpiCard() {
+export function KpiCardTemplate() {
   return (
     <Card className="@container/card">
       <CardHeader>
