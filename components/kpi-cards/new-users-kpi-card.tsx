@@ -11,7 +11,6 @@ import { useRangeFromParams } from '@/hooks/use-range-from-params';
 
 export function NewUsersKpiCard() {
   const range = useRangeFromParams();
-  console.log(`range: ${JSON.stringify(range)}`);
   const query = useQuery(newUsersCountKpiCardQueryOptions(range));
 
   return (

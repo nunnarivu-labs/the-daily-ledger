@@ -23,6 +23,7 @@ import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { usePathname, useRouter } from 'next/navigation';
 import { Range } from '@/types/range';
+import { useRangeFromParams } from '@/hooks/use-range-from-params';
 
 type ActivePreset = '90d' | '30d' | '7d' | 'custom';
 
@@ -49,26 +50,25 @@ function getActivePreset(date: DateRange): ActivePreset {
 export function DateRangePicker() {
   const router = useRouter();
   const pathname = usePathname();
-
-  console.log(`pathname: ${pathname}`);
+  const searchParams = useRangeFromParams();
 
   const [dateRange, setDateRange] = useState<DateRange>({
-    from: subDays(today, 90),
-    to: today,
+    from: searchParams.from,
+    to: searchParams.to,
   });
 
   const [activePreset, setActivePreset] = useState<ActivePreset>(
-    getActivePreset({ from: dateRange.from, to: dateRange.to }),
+    getActivePreset({ from: searchParams.from, to: searchParams.to }),
   );
 
   const pushToRouter = useCallback(
     (newRange: Range) => {
-      const searchParams = new URLSearchParams({
+      const newSearchParams = new URLSearchParams({
         from: newRange.from.getTime().toString(),
         to: newRange.to.getTime().toString(),
       });
 
-      router.push(`${pathname}?${searchParams}`);
+      router.push(`${pathname}?${newSearchParams}`);
     },
     [pathname, router],
   );
