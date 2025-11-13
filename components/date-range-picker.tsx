@@ -11,7 +11,7 @@ import {
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import { addDays, format } from 'date-fns';
+import { format, subDays } from 'date-fns';
 import {
   Popover,
   PopoverContent,
@@ -26,7 +26,7 @@ type ActivePreset = '90d' | '30d' | '7d' | 'custom';
 
 export function DateRangePicker() {
   const [date, setDate] = useState<DateRange | undefined>({
-    from: addDays(new Date(), -90),
+    from: subDays(new Date(), 90),
     to: new Date(),
   });
 
@@ -34,16 +34,17 @@ export function DateRangePicker() {
 
   useEffect(() => {
     const today = new Date();
+
     switch (activePreset) {
       case '90d':
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setDate({ from: addDays(today, -90), to: today });
+        setDate({ from: subDays(today, 90), to: today });
         break;
       case '30d':
-        setDate({ from: addDays(today, -30), to: today });
+        setDate({ from: subDays(today, 30), to: today });
         break;
       case '7d':
-        setDate({ from: addDays(today, -7), to: today });
+        setDate({ from: subDays(today, 7), to: today });
         break;
       default:
         break;
