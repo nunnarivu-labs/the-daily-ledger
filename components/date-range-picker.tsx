@@ -21,6 +21,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
+import { usePathname, useRouter } from 'next/navigation';
+import { Range } from '@/types/range';
 
 type ActivePreset = '90d' | '30d' | '7d' | 'custom';
 
@@ -45,6 +47,11 @@ function getActivePreset(date: DateRange): ActivePreset {
 }
 
 export function DateRangePicker() {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  console.log(`pathname: ${pathname}`);
+
   const [dateRange, setDateRange] = useState<DateRange>({
     from: subDays(today, 90),
     to: today,
@@ -52,6 +59,18 @@ export function DateRangePicker() {
 
   const [activePreset, setActivePreset] = useState<ActivePreset>(
     getActivePreset({ from: dateRange.from, to: dateRange.to }),
+  );
+
+  const pushToRouter = useCallback(
+    (newRange: Range) => {
+      const searchParams = new URLSearchParams({
+        from: newRange.from.getTime().toString(),
+        to: newRange.to.getTime().toString(),
+      });
+
+      router.push(`${pathname}?${searchParams}`);
+    },
+    [pathname, router],
   );
 
   const handleDateSelect = (newDate: DateRange | undefined) => {
@@ -66,25 +85,38 @@ export function DateRangePicker() {
     setActivePreset(getActivePreset(nextDate));
   };
 
+  const handleDateBlur = useCallback(() => {
+    if (dateRange?.from && dateRange?.to) {
+      pushToRouter({ from: dateRange.from, to: dateRange.to });
+    }
+  }, [dateRange, pushToRouter]);
+
   const handleActivePresetSelect = useCallback(
     (newActivePreset: ActivePreset) => {
       setActivePreset(newActivePreset);
 
+      let range: Range | undefined = undefined;
+
       switch (newActivePreset) {
         case '90d':
-          setDateRange({ from: subDays(today, 90), to: today });
+          range = { from: subDays(today, 90), to: today };
           break;
         case '30d':
-          setDateRange({ from: subDays(today, 30), to: today });
+          range = { from: subDays(today, 30), to: today };
           break;
         case '7d':
-          setDateRange({ from: subDays(today, 7), to: today });
+          range = { from: subDays(today, 7), to: today };
           break;
         default:
           break;
       }
+
+      if (range) {
+        setDateRange(range);
+        pushToRouter(range);
+      }
     },
-    [],
+    [pushToRouter],
   );
 
   return (
@@ -129,7 +161,13 @@ export function DateRangePicker() {
           </SelectItem>
         </SelectContent>
       </Select>
-      <Popover>
+      <Popover
+        onOpenChange={(open) => {
+          if (!open) {
+            handleDateBlur();
+          }
+        }}
+      >
         <PopoverTrigger asChild>
           <Button
             id="date"
@@ -155,13 +193,7 @@ export function DateRangePicker() {
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent
-          className="w-auto p-0"
-          align="end"
-          onBlur={() => {
-            console.log('Hello World');
-          }}
-        >
+        <PopoverContent className="w-auto p-0" align="end">
           <Calendar
             today={today}
             mode="range"
