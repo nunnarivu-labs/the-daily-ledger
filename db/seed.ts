@@ -54,6 +54,7 @@ async function main() {
       firstName,
       lastName,
       email: faker.internet.email({ firstName, lastName: `${lastName}${i}` }),
+      createdAt: faker.date.past({ years: 3 }),
     });
   }
 
