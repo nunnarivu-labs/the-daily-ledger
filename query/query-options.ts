@@ -6,6 +6,8 @@ import {
 } from '@/db/kpi';
 import { queryOptions } from '@tanstack/react-query';
 import { Range } from '@/types/range';
+import { fetchSalesProfitChartData } from '@/db/chart';
+import { SalesProfitChartData } from '@/types/sales-profit-chart-data';
 
 export const newUsersCountKpiCardQueryOptions = (range: Range) =>
   queryOptions({
@@ -45,4 +47,20 @@ export const totalRevenueKpiCardQueryOptions = (range: Range) =>
         from: range.from.getTime(),
         to: range.to.getTime(),
       }),
+  });
+
+export const salesProfitChartDataQueryOptions = (range: Range) =>
+  queryOptions({
+    queryKey: ['chart', 'salesProfit', range],
+    queryFn: () =>
+      fetchSalesProfitChartData({
+        from: range.from.getTime(),
+        to: range.to.getTime(),
+      }),
+    select: (data): SalesProfitChartData[] =>
+      data.map((row) => ({
+        date: row.date,
+        Sales: parseFloat(row.totalSales),
+        Profit: parseFloat(row.totalProfit),
+      })),
   });
