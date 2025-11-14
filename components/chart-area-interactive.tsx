@@ -6,7 +6,6 @@ import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -18,14 +17,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 export const description = 'An interactive area chart';
 
