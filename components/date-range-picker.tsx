@@ -11,7 +11,13 @@ import {
 import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import { format, subDays, differenceInDays, endOfDay } from 'date-fns';
+import {
+  format,
+  subDays,
+  differenceInDays,
+  endOfDay,
+  startOfDay,
+} from 'date-fns';
 import {
   Popover,
   PopoverContent,
@@ -77,7 +83,7 @@ export function DateRangePicker() {
     if (!newDate?.from || !newDate?.to) return;
 
     const nextDate: DateRange = {
-      from: newDate.from,
+      from: startOfDay(newDate.from),
       to: endOfDay(newDate.to),
     };
 
@@ -99,13 +105,13 @@ export function DateRangePicker() {
 
       switch (newActivePreset) {
         case '90d':
-          range = { from: subDays(today, 90), to: today };
+          range = { from: startOfDay(subDays(today, 90)), to: today };
           break;
         case '30d':
-          range = { from: subDays(today, 30), to: today };
+          range = { from: startOfDay(subDays(today, 30)), to: today };
           break;
         case '7d':
-          range = { from: subDays(today, 7), to: today };
+          range = { from: startOfDay(subDays(today, 7)), to: today };
           break;
         default:
           break;

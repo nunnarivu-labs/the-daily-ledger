@@ -8,6 +8,7 @@ import {
   numeric,
   timestamp,
   uniqueIndex,
+  index,
 } from 'drizzle-orm/pg-core';
 
 export const categoryEnum = pgEnum('category', [
@@ -55,41 +56,61 @@ export const users = pgTable(
       .notNull()
       .$onUpdateFn(() => new Date()),
   },
-  (table) => [uniqueIndex('email_idx').on(table.email)],
+  (table) => [
+    uniqueIndex('email_idx').on(table.email),
+    index('users_created_at_idx').on(table.createdAt),
+  ],
 );
 
-export const orders = pgTable('orders', {
-  id: uuid()
-    .primaryKey()
-    .default(sql`gen_random_uuid()`),
-  status: orderStatusEnum().notNull(),
-  totalAmount: numeric('total_amount', { precision: 100, scale: 5 }).notNull(),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => users.id),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at')
-    .defaultNow()
-    .notNull()
-    .$onUpdateFn(() => new Date()),
-});
+export const orders = pgTable(
+  'orders',
+  {
+    id: uuid()
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    status: orderStatusEnum().notNull(),
+    totalAmount: numeric('total_amount', {
+      precision: 100,
+      scale: 5,
+    }).notNull(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .notNull()
+      .$onUpdateFn(() => new Date()),
+  },
+  (table) => [
+    index('orders_created_at_idx').on(table.createdAt),
+    index('user_id_idx').on(table.userId),
+  ],
+);
 
-export const orderItems = pgTable('order_items', {
-  id: uuid()
-    .primaryKey()
-    .default(sql`gen_random_uuid()`),
-  quantity: integer().notNull(),
-  pricePerUnit: numeric('price_per_unit', {
-    precision: 100,
-    scale: 5,
-  }).notNull(),
-  orderId: uuid('order_id')
-    .notNull()
-    .references(() => orders.id),
-  productId: uuid('product_id')
-    .notNull()
-    .references(() => products.id),
-});
+export const orderItems = pgTable(
+  'order_items',
+  {
+    id: uuid()
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    quantity: integer().notNull(),
+    pricePerUnit: numeric('price_per_unit', {
+      precision: 100,
+      scale: 5,
+    }).notNull(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => orders.id),
+    productId: uuid('product_id')
+      .notNull()
+      .references(() => products.id),
+  },
+  (table) => [
+    index('order_id_idx').on(table.orderId),
+    index('product_id_idx').on(table.productId),
+  ],
+);
 
 export const usersRelations = relations(users, ({ many }) => ({
   orders: many(orders),

@@ -8,7 +8,7 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import * as React from 'react';
 import { DateRangePicker } from '@/components/date-range-picker';
 import { redirect, useSearchParams } from 'next/navigation';
-import { endOfDay, subDays } from 'date-fns';
+import { endOfDay, startOfDay, subDays } from 'date-fns';
 
 export default function Page() {
   const params = useSearchParams();
@@ -18,7 +18,7 @@ export default function Page() {
     const threeMonthsAgo = subDays(today, 90);
 
     const newSearchParams = new URLSearchParams({
-      from: threeMonthsAgo.getTime().toString(),
+      from: startOfDay(threeMonthsAgo).getTime().toString(),
       to: today.getTime().toString(),
     });
 
