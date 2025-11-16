@@ -8,6 +8,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { Range } from '@/types/range';
 import { fetchSalesProfitChartData } from '@/db/chart';
 import { SalesProfitChartData } from '@/types/sales-profit-chart-data';
+import { fetchOrders } from '@/db/orders-table';
 
 export const newUsersCountKpiCardQueryOptions = (range: Range) =>
   queryOptions({
@@ -64,3 +65,6 @@ export const salesProfitChartDataQueryOptions = (range: Range) =>
         Profit: parseFloat(row.totalProfit),
       })),
   });
+
+export const fetchOrdersQueryOptions = () =>
+  queryOptions({ queryKey: ['table', 'orders'], queryFn: fetchOrders });
