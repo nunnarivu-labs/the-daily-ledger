@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { IconDashboard, IconInnerShadowTop } from '@tabler/icons-react';
+import { Icon, IconDashboard, IconInnerShadowTop } from '@tabler/icons-react';
 
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -14,6 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { ShoppingCartIcon } from '@/components/ui/icons/lucide-shopping-cart';
 
 const data = {
   user: {
@@ -26,6 +27,11 @@ const data = {
       title: 'Dashboard',
       url: '/dashboard',
       icon: IconDashboard,
+    },
+    {
+      title: 'Orders',
+      url: '/orders',
+      icon: ShoppingCartIcon as Icon,
     },
   ],
 };
