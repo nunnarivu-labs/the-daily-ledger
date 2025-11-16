@@ -35,12 +35,10 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    // --- KEY CHANGE #1: Make the container a full-height flex column ---
     <div className="flex h-full flex-col overflow-hidden rounded-md border">
-      {/* --- KEY CHANGE #2: Make the table's wrapper scrollable --- */}
       <div className="flex-1 overflow-y-auto">
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 z-10 bg-background">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -64,6 +62,9 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                  // --- KEY CHANGE: Added 'h-16' for taller rows ---
+                  // You can change this to h-12, h-20, etc. to adjust preference.
+                  className="h-16 hover:bg-muted/50 even:bg-muted/25"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
