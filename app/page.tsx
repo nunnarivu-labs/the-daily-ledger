@@ -10,6 +10,9 @@ import { DateRangePicker } from '@/components/date-range-picker';
 import { redirect, useSearchParams } from 'next/navigation';
 import { endOfDay, startOfDay, subDays } from 'date-fns';
 
+import data from './data.json';
+import { DataTable } from '@/components/data-table';
+
 export default function Page() {
   const params = useSearchParams();
 
@@ -47,6 +50,7 @@ export default function Page() {
               <div className="px-4 lg:px-6">
                 <ChartAreaInteractive />
               </div>
+              <DataTable data={data} />
             </div>
           </div>
         </div>
