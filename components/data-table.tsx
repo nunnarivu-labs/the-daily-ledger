@@ -62,8 +62,6 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  // --- KEY CHANGE: Added 'h-16' for taller rows ---
-                  // You can change this to h-12, h-20, etc. to adjust preference.
                   className="h-16 hover:bg-muted/50 even:bg-muted/25"
                 >
                   {row.getVisibleCells().map((cell) => (
