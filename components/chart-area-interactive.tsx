@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'; // <-- 1. Import YAxis
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 
 import {
