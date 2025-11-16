@@ -24,11 +24,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 const chartConfig = {
   Sales: {
     label: 'Sales',
-    color: 'hsl(var(--chart-1))',
+    color: 'var(--primary)',
   },
   Profit: {
     label: 'Profit',
-    color: 'hsl(var(--chart-2))',
+    color: 'var(--primary)',
   },
 } satisfies ChartConfig;
 
