@@ -32,7 +32,11 @@ export function NavMain({
               <SidebarMenuButton
                 isActive={pathname.startsWith(item.url)}
                 tooltip={item.title}
-                onClick={() => router.push(item.url)}
+                onClick={() => {
+                  if (!pathname.startsWith(item.url)) {
+                    router.push(item.url);
+                  }
+                }}
               >
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
