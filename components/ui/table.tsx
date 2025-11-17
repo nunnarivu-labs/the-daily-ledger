@@ -19,6 +19,19 @@ function Table({ className, ...props }: React.ComponentProps<'table'>) {
   );
 }
 
+function TableWithoutDiv({
+  className,
+  ...props
+}: React.ComponentProps<'table'>) {
+  return (
+    <table
+      data-slot="table"
+      className={cn('w-full caption-bottom text-sm', className)}
+      {...props}
+    />
+  );
+}
+
 function TableHeader({ className, ...props }: React.ComponentProps<'thead'>) {
   return (
     <thead
@@ -106,6 +119,7 @@ function TableCaption({
 
 export {
   Table,
+  TableWithoutDiv,
   TableHeader,
   TableBody,
   TableFooter,

@@ -9,7 +9,8 @@ export const fetchOrders = async (): Promise<OrderResult> => {
   const ordersPromise = db
     .select()
     .from(orders)
-    .limit(500)
+    .limit(50)
+    .offset(0)
     .orderBy(desc(orders.createdAt));
 
   const countPromise = db.select({ value: count() }).from(orders);
