@@ -36,25 +36,26 @@ export function OrdersTable() {
 
   const onScrollBeyondIndex = useCallback(
     (virtualIndexes: number[]) => {
-      if (!virtualIndexes.length) return;
-      const newOffsets: number[] = [];
-      newOffsets.push(getOffsetFromIndex(virtualIndexes[0], LIMIT));
-
-      let nextIndex = virtualIndexes[LIMIT - (virtualIndexes[0] % LIMIT)];
-
-      while (nextIndex) {
-        newOffsets.push(getOffsetFromIndex(nextIndex, LIMIT));
-        nextIndex = virtualIndexes[nextIndex + LIMIT];
+      if (virtualIndexes.length === 0) {
+        return;
       }
 
-      const hasNewOffsets = newOffsets.some((offset) => !offsets.has(offset));
+      const startOffset = getOffsetFromIndex(virtualIndexes[0], LIMIT);
+      const endOffset = getOffsetFromIndex(
+        virtualIndexes[virtualIndexes.length - 1],
+        LIMIT,
+      );
 
-      if (hasNewOffsets) {
-        newOffsets
-          .filter((offset) => !offsets.has(offset))
-          .forEach((offset) => offsets.add(offset));
+      const newOffsets = new Set<number>();
 
-        setOffsets(new Set([...offsets]));
+      for (let i = startOffset; i <= endOffset; i += LIMIT) {
+        if (!offsets.has(i)) {
+          newOffsets.add(i);
+        }
+      }
+
+      if (newOffsets.size > 0) {
+        setOffsets((prevOffsets) => new Set([...prevOffsets, ...newOffsets]));
       }
     },
     [offsets],
