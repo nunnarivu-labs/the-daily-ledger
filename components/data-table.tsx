@@ -66,7 +66,7 @@ export function DataTable<TData, TValue>({
     getScrollElement: () => parentRef.current,
     estimateSize: () => 64,
     overscan: 10,
-    isScrollingResetDelay: 1000,
+    isScrollingResetDelay: 500,
     onChange: (instance) => {
       if (!instance.isScrolling) {
         onScrollBeyondIndex(instance.getVirtualIndexes());
