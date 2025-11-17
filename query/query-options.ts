@@ -9,6 +9,7 @@ import { Range } from '@/types/range';
 import { fetchSalesProfitChartData } from '@/db/chart';
 import { SalesProfitChartData } from '@/types/sales-profit-chart-data';
 import { fetchOrders } from '@/db/orders-table';
+import { OrdersTableFetchDataQuery } from '@/types/orders-table-fetch-data-query';
 
 export const newUsersCountKpiCardQueryOptions = (range: Range) =>
   queryOptions({
@@ -66,5 +67,8 @@ export const salesProfitChartDataQueryOptions = (range: Range) =>
       })),
   });
 
-export const fetchOrdersQueryOptions = () =>
-  queryOptions({ queryKey: ['table', 'orders'], queryFn: fetchOrders });
+export const fetchOrdersQueryOptions = (query: OrdersTableFetchDataQuery) =>
+  queryOptions({
+    queryKey: ['table', 'orders', query],
+    queryFn: () => fetchOrders(query),
+  });

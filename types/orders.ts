@@ -5,7 +5,13 @@ export type Order = {
   createdAt: Date;
 };
 
-export type OrderResult = {
+export type OrderPaging = {
   count: number;
+  offset: number;
+  limit: number;
+};
+
+export type OrderResult = {
+  paging: OrderPaging;
   orders: Order[];
 };

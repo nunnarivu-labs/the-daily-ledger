@@ -19,12 +19,6 @@ import { useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Skeleton } from '@/components/ui/skeleton';
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  rowCount: number;
-}
-
 const SkeletonRow = <TData, TValue>({
   columns,
   style,
@@ -43,10 +37,18 @@ const SkeletonRow = <TData, TValue>({
   );
 };
 
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  rowCount: number;
+  onScrollBeyondIndex: (virtualIndexes: number[]) => void;
+}
+
 export function DataTable<TData, TValue>({
   columns,
   data,
   rowCount,
+  onScrollBeyondIndex,
 }: DataTableProps<TData, TValue>) {
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -63,8 +65,13 @@ export function DataTable<TData, TValue>({
     count: rowCount,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 64,
-    overscan: 20,
+    overscan: 10,
     isScrollingResetDelay: 1000,
+    onChange: (instance) => {
+      if (!instance.isScrolling) {
+        onScrollBeyondIndex(instance.getVirtualIndexes());
+      }
+    },
   });
 
   const virtualItems = virtualizer.getVirtualItems();
@@ -116,7 +123,7 @@ export function DataTable<TData, TValue>({
                   }px)`,
                 };
 
-                if (!row) {
+                if (!row || !row.original) {
                   return (
                     <SkeletonRow
                       key={virtualRow.index}
@@ -130,7 +137,6 @@ export function DataTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
-                    // className="hover:bg-muted/50 even:bg-muted/25"
                     style={style}
                   >
                     {row.getVisibleCells().map((cell) => (
