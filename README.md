@@ -2,6 +2,8 @@
 
 <img width="1421" height="768" alt="Screenshot 2025-11-18 at 11 52 57" src="https://github.com/user-attachments/assets/fdc115b5-0ecc-46f4-8093-bdc253bbfca5" />
 
+<img width="1421" height="770" alt="Screenshot 2025-11-18 at 11 54 36" src="https://github.com/user-attachments/assets/909035cf-779f-4ab1-abbf-7eea9392b609" />
+
 **Live Demo:** [**thedailyledger.nunnarivulabs.in**](https://thedailyledger.nunnarivulabs.in)
 
 ---
