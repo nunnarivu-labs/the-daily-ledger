@@ -37,7 +37,7 @@ The biggest challenge was building the Orders page to handle the dataset of over
 
 **The Solution:**
 Think of the table as a magic book with 10 million pages. The virtualisation engine is smart enough to only ever render the 20-30 pages you're looking at right now.
-*   **Efficient Rendering:** It keeps the DOM footprint incredibly small, ensuring a smooth 60fps scrolling experience.
+*   **Efficient Rendering:** It keeps the DOM footprint incredibly small, ensuring a smooth scrolling experience.
 *   **Sparse Data Fetching:** The "sparse" part is the real magic. If you grab the scrollbar and jump to the middle of the list (say, to order #5,000,000), the app is intelligent enough to only fetch the pages for that specific window, without loading all the pages in between.
 
 This is an advanced, production-grade pattern that ensures the application remains blazing fast and responsive at any scale.
