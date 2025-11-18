@@ -108,6 +108,14 @@ To run the full-scale version of this project on your local machine, follow thes
     ```
     Open [http://localhost:3000](http://localhost:3000) to view the application.
 
+### Everyday Development
+
+Once the initial setup is complete, you can use this single, streamlined command for your daily work. It starts both the Postgres Docker container and the Next.js development server in parallel. When you stop the process, it will automatically and cleanly shut down the Docker container as well, so you don't have to manage them separately.
+
+```bash
+  npm run dev:all
+   ```
+
 ---
 
 ## 🧠 Challenges & Lessons Learned
