@@ -97,7 +97,7 @@ To run the full-scale version of this project on your local machine, follow thes
     ```
 
 6.  **Seed the database:**
-    This will populate your database with over 10 million records. **Warning: This is a very long-running process (30-60+ minutes).** Modify the constants in `scripts/seed.ts` for a smaller dataset if desired.
+    This will populate your database with over 10 million records. **Warning: This is a very long-running process (30-60+ minutes).** Modify the constants in `db/seed.ts` for a smaller dataset if desired.
     ```bash
     npm run db:seed
     ```

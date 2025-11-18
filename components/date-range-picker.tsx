@@ -143,7 +143,9 @@ export function DateRangePicker() {
       </ToggleGroup>
       <Select
         value={activePreset}
-        onValueChange={(preset) => setActivePreset(preset as ActivePreset)}
+        onValueChange={(preset) =>
+          handleActivePresetSelect(preset as ActivePreset)
+        }
       >
         <SelectTrigger
           className="flex w-full md:hidden"
