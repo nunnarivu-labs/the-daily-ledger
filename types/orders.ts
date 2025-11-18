@@ -1,6 +1,8 @@
+export type OrderStatus = 'Pending' | 'Shipped' | 'Delivered' | 'Cancelled';
+
 export type Order = {
   id: string;
-  status: 'Pending' | 'Shipped' | 'Delivered' | 'Cancelled';
+  status: OrderStatus;
   totalAmount: number;
   createdAt: Date;
 };

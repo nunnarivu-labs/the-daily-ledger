@@ -18,6 +18,7 @@ import {
 import { useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useRouter } from 'next/navigation';
 
 const SkeletonRow = <TData, TValue>({
   columns,
@@ -44,7 +45,7 @@ interface DataTableProps<TData, TValue> {
   onScrollBeyondIndex: (virtualIndexes: number[]) => void;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: string }, TValue>({
   columns,
   data,
   rowCount,
@@ -75,6 +76,8 @@ export function DataTable<TData, TValue>({
   });
 
   const virtualItems = virtualizer.getVirtualItems();
+
+  const router = useRouter();
 
   return (
     <div
@@ -138,6 +141,9 @@ export function DataTable<TData, TValue>({
                     key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
                     style={style}
+                    onClick={() =>
+                      router.push(`/orders?orderId=${row.original.id}`)
+                    }
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>

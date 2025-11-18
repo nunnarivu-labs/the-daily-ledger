@@ -13,7 +13,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -74,7 +73,7 @@ export function OrderModal({ orderId }: { orderId: string }) {
 
   return (
     <Dialog open={true} onOpenChange={handleOnOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="flex flex-col sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Order Details</DialogTitle>
         </DialogHeader>
@@ -163,20 +162,16 @@ export function OrderModal({ orderId }: { orderId: string }) {
                     </TableRow>
                   ))}
                 </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TableCell colSpan={3} className="text-right font-bold">
-                      Grand Total
-                    </TableCell>
-                    <TableCell className="text-right font-bold">
-                      {Intl.NumberFormat('en-US', {
-                        style: 'currency',
-                        currency: 'USD',
-                      }).format(data.totalAmount)}
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
               </Table>
+              <div className="flex items-center justify-between border-t px-4 py-2 font-bold">
+                <span>Grand Total</span>
+                <span>
+                  {Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                  }).format(data.totalAmount)}
+                </span>
+              </div>
             </div>
           </div>
         )}
