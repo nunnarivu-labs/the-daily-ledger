@@ -11,7 +11,7 @@ type OrderItem = {
 
 export type OrderDetailsData = {
   id: string;
-  createdAt: number;
+  createdAt: string;
   status: OrderStatus;
   totalAmount: number;
   user: {

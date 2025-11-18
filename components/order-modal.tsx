@@ -5,7 +5,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { OrderDetailsData } from '@/types/order-details-data';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@radix-ui/react-menu';
 import { Badge } from '@/components/ui/badge';
@@ -19,50 +18,14 @@ import {
 } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useQuery } from '@tanstack/react-query';
-
-const fetchOrderDetails = async (orderId: string): Promise<OrderDetailsData> =>
-  new Promise((resolve) =>
-    setTimeout(
-      () =>
-        resolve({
-          id: orderId,
-          createdAt: Date.now(),
-          status: 'Shipped',
-          totalAmount: 125.5,
-          user: {
-            firstName: 'Johnson',
-            lastName: 'Abraham',
-            email: 'johnson@example.com',
-          },
-          items: [
-            {
-              quantity: 2,
-              pricePerUnit: 25.0,
-              product: {
-                name: 'Artisan Roast Espresso Beans',
-                imageUrl: 'https://picsum.photos/seed/laS6tbl/374/3631',
-              },
-            },
-            {
-              quantity: 1,
-              pricePerUnit: 75.5,
-              product: {
-                name: 'Premium Coffee Grinder',
-                imageUrl: 'https://picsum.photos/seed/5bsZA/3216/3768',
-              },
-            },
-          ],
-        }),
-      1000,
-    ),
-  );
+import { fetchOrderDetail } from '@/db/order-detail';
 
 export function OrderModal({ orderId }: { orderId: string }) {
   const router = useRouter();
 
   const { data, status } = useQuery({
     queryKey: ['order', orderId],
-    queryFn: () => fetchOrderDetails(orderId),
+    queryFn: () => fetchOrderDetail(orderId),
   });
 
   const handleOnOpenChange = (open: boolean) => {
