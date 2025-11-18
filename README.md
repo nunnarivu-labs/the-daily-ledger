@@ -79,7 +79,7 @@ To run the full-scale version of this project on your local machine, follow thes
 3.  **Set up environment variables:**
     Create a `.env` file in the root of the project and add your local database URL:
     ```
-    DATABASE_URL="postgresql://user:password@localhost:5432/daily_ledger"
+    DATABASE_URL="postgresql://[your_username]:[your_password]@localhost:5432/daily_ledger"
     ```
 
 4.  **Start the local database:**
