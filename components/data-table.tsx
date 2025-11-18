@@ -112,7 +112,7 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {virtualItems.length ? (
+            {rows.length ? (
               virtualItems.map((virtualRow, index) => {
                 const row = rows[virtualRow.index];
 
