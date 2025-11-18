@@ -6,13 +6,18 @@ import { SiteHeader } from '@/components/site-header';
 import { SidebarInset } from '@/components/ui/sidebar';
 import * as React from 'react';
 import { DateRangePicker } from '@/components/date-range-picker';
-import { redirect, useSearchParams } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { endOfDay, startOfDay, subDays } from 'date-fns';
+import { use } from 'react';
 
-export default function Page() {
-  const params = useSearchParams();
+export default function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ from?: string; to?: string }>;
+}) {
+  const params = use(searchParams);
 
-  if (!params.has('from') || !params.has('to')) {
+  if (!params.from || !params.to) {
     const today = endOfDay(new Date());
     const threeMonthsAgo = subDays(today, 90);
 

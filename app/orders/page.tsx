@@ -4,19 +4,21 @@ import { SidebarInset } from '@/components/ui/sidebar';
 import { SiteHeader } from '@/components/site-header';
 import * as React from 'react';
 import { OrdersTable } from '@/components/tables/orders-table';
-import { useSearchParams } from 'next/navigation';
 import { OrderModal } from '@/components/order-modal';
+import { use } from 'react';
 
-export default function Page() {
-  const searchParams = useSearchParams();
+export default function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ orderId?: string }>;
+}) {
+  const params = use(searchParams);
 
   return (
     <SidebarInset>
       <SiteHeader header="Orders" />
       <OrdersTable />
-      {searchParams.has('orderId') ? (
-        <OrderModal orderId={searchParams.get('orderId')!} />
-      ) : null}
+      {params.orderId ? <OrderModal orderId={params.orderId} /> : null}
     </SidebarInset>
   );
 }
