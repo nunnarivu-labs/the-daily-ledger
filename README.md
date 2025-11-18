@@ -40,6 +40,10 @@ Think of the table as a magic book with 10 million pages. The virtualisation eng
 
 This is an advanced, production-grade pattern that ensures the application remains blazing fast and responsive at any scale.
 
+
+https://github.com/user-attachments/assets/a7a573c4-8224-40bd-a4da-0bd534f82346
+
+
 ---
 
 ## 🛠️ Technical Architecture & Stack
@@ -118,4 +122,3 @@ Building this project involved solving several interesting and challenging probl
 ## License
 
 This project is licensed under the Apache 2.0 License.
-```
