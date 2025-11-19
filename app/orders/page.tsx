@@ -3,7 +3,7 @@
 import { SidebarInset } from '@/components/ui/sidebar';
 import { SiteHeader } from '@/components/site-header';
 import * as React from 'react';
-import { OrdersTable } from '@/components/tables/orders-table';
+import { OrdersTable } from '@/components/orders/orders-table';
 import { OrderModal } from '@/components/order-modal';
 import { use } from 'react';
 

@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { DataTable } from '@/components/data-table';
-import { columns } from '@/components/columns';
+import { columns } from '@/components/orders/columns';
 import * as React from 'react';
 import { useQueries } from '@tanstack/react-query';
 import { fetchOrdersQueryOptions } from '@/query/query-options';
