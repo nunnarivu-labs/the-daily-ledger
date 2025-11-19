@@ -19,6 +19,7 @@ export const useOrdersColumns = (): ColumnDef<Order>[] => {
       {
         accessorKey: 'status',
         header: 'Status',
+        enableHiding: false,
         cell: ({ row }) => {
           const { status } = row.original;
 
@@ -44,18 +45,30 @@ export const useOrdersColumns = (): ColumnDef<Order>[] => {
       {
         accessorKey: 'totalAmount',
         header: () => <div className="text-right">Amount</div>,
+        enableHiding: false,
         cell: ({ row }) => (
           <div className="text-right font-medium">
             {Intl.NumberFormat('en-US', {
               style: 'currency',
               currency: 'USD',
-            }).format(row.getValue('totalAmount') as number)}
+            }).format(parseFloat(row.getValue('totalAmount')))}
           </div>
         ),
       },
       {
+        id: 'fullName',
+        accessorFn: (row) => `${row.user.firstName} ${row.user.lastName}`,
+        header: 'Name',
+      },
+      {
+        id: 'email',
+        accessorFn: (row) => row.user.email,
+        header: 'Email',
+      },
+      {
         accessorKey: 'createdAt',
         header: 'Created At',
+        enableHiding: false,
         cell: ({ row }) =>
           Intl.DateTimeFormat('en-US', {
             day: 'numeric',
@@ -63,10 +76,11 @@ export const useOrdersColumns = (): ColumnDef<Order>[] => {
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
-          }).format(row.getValue('createdAt') as Date),
+          }).format(new Date(row.getValue('createdAt'))),
       },
       {
         id: 'viewOrder',
+        enableHiding: false,
         cell: ({ row }) => {
           return (
             <div className="text-right">

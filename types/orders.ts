@@ -1,10 +1,13 @@
+import { User } from '@/types/user';
+
 export type OrderStatus = 'Pending' | 'Shipped' | 'Delivered' | 'Cancelled';
 
 export type Order = {
   id: string;
   status: OrderStatus;
-  totalAmount: number;
-  createdAt: Date;
+  totalAmount: string;
+  createdAt: string;
+  user: User;
 };
 
 export type OrderPaging = {

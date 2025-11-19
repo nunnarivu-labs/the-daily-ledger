@@ -82,6 +82,7 @@ export function OrdersTable() {
           columns={columns}
           rowCount={firstQuery.data.paging.count}
           onScrollBeyondIndex={onScrollBeyondIndex}
+          defaultHiddenColumnIds={['fullName', 'email']}
         />
       )}
     </div>

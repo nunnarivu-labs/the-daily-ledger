@@ -1,4 +1,5 @@
 import { OrderStatus } from '@/types/orders';
+import { User } from '@/types/user';
 
 type OrderItem = {
   quantity: number;
@@ -14,10 +15,6 @@ export type OrderDetailsData = {
   createdAt: string;
   status: OrderStatus;
   totalAmount: number;
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
+  user: User;
   items: OrderItem[];
 };
