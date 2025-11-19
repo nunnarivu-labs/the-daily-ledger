@@ -3,13 +3,46 @@ import { Order } from '@/types/orders';
 import { Button } from '@/components/ui/button';
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { Badge } from '@/components/ui/badge';
+import {
+  IconCircleCheckFilled,
+  IconCircleXFilled,
+  IconLoader,
+  IconTruckDelivery,
+} from '@tabler/icons-react';
 
 export const useOrdersColumns = (): ColumnDef<Order>[] => {
   const router = useRouter();
 
   return useMemo(
     () => [
-      { accessorKey: 'status', header: 'Status' },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        cell: ({ row }) => {
+          const { status } = row.original;
+          return (
+            <Badge variant="outline">
+              {status === 'Delivered' && (
+                <IconCircleCheckFilled className="size-3.5 fill-green-500 text-white dark:fill-green-400" />
+              )}
+
+              {status === 'Shipped' && (
+                <IconTruckDelivery className="size-3.5 text-blue-500 dark:text-blue-400" />
+              )}
+
+              {status === 'Pending' && (
+                <IconLoader className="size-3.5 animate-spin text-muted-foreground" />
+              )}
+
+              {status === 'Cancelled' && (
+                <IconCircleXFilled className="size-3.5 fill-red-500 text-white dark:fill-red-400" />
+              )}
+              {status}
+            </Badge>
+          );
+        },
+      },
       {
         accessorKey: 'totalAmount',
         header: 'Amount',
