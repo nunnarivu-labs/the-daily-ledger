@@ -21,20 +21,18 @@ export const useOrdersColumns = (): ColumnDef<Order>[] => {
         header: 'Status',
         cell: ({ row }) => {
           const { status } = row.original;
+
           return (
-            <Badge variant="outline">
+            <Badge variant="outline" className="gap-1">
               {status === 'Delivered' && (
                 <IconCircleCheckFilled className="size-3.5 fill-green-500 text-white dark:fill-green-400" />
               )}
-
               {status === 'Shipped' && (
                 <IconTruckDelivery className="size-3.5 text-blue-500 dark:text-blue-400" />
               )}
-
               {status === 'Pending' && (
                 <IconLoader className="size-3.5 animate-spin text-muted-foreground" />
               )}
-
               {status === 'Cancelled' && (
                 <IconCircleXFilled className="size-3.5 fill-red-500 text-white dark:fill-red-400" />
               )}
@@ -45,12 +43,15 @@ export const useOrdersColumns = (): ColumnDef<Order>[] => {
       },
       {
         accessorKey: 'totalAmount',
-        header: 'Amount',
-        cell: ({ row }) =>
-          Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-          }).format(row.getValue('totalAmount') as number),
+        header: () => <div className="text-right">Amount</div>,
+        cell: ({ row }) => (
+          <div className="text-right font-medium">
+            {Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            }).format(row.getValue('totalAmount') as number)}
+          </div>
+        ),
       },
       {
         accessorKey: 'createdAt',
@@ -58,23 +59,27 @@ export const useOrdersColumns = (): ColumnDef<Order>[] => {
         cell: ({ row }) =>
           Intl.DateTimeFormat('en-US', {
             day: 'numeric',
-            month: 'long',
+            month: 'short',
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
-            second: '2-digit',
           }).format(row.getValue('createdAt') as Date),
       },
       {
         id: 'viewOrder',
         cell: ({ row }) => {
           return (
-            <Button
-              variant="outline"
-              onClick={() => router.push(`/orders?orderId=${row.original.id}`)}
-            >
-              View Order
-            </Button>
+            <div className="text-right">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  router.push(`/orders?orderId=${row.original.id}`)
+                }
+              >
+                View
+              </Button>
+            </div>
           );
         },
       },
