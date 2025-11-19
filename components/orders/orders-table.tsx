@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { DataTable } from '@/components/data-table';
-import { columns } from '@/components/orders/columns';
+import { useOrdersColumns } from '@/components/orders/use-orders-columns';
 import * as React from 'react';
 import { useQueries } from '@tanstack/react-query';
 import { fetchOrdersQueryOptions } from '@/query/query-options';
@@ -12,6 +12,8 @@ const LIMIT = 50;
 
 export function OrdersTable() {
   const [offsets, setOffsets] = React.useState(new Set([0]));
+
+  const columns = useOrdersColumns();
 
   const ordersQueries = useQueries({
     queries: Array.from(offsets).map((offset) =>

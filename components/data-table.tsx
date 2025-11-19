@@ -18,7 +18,6 @@ import {
 import { useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useRouter } from 'next/navigation';
 
 const SkeletonRow = <TData, TValue>({
   columns,
@@ -31,7 +30,7 @@ const SkeletonRow = <TData, TValue>({
     <TableRow style={style}>
       {columns.map((column, index) => (
         <TableCell key={index} style={{ width: column.size }}>
-          <Skeleton className="h-6 w-full" />
+          <Skeleton className="h-6 w-[80%]" />
         </TableCell>
       ))}
     </TableRow>
@@ -76,8 +75,6 @@ export function DataTable<TData extends { id: string }, TValue>({
   });
 
   const virtualItems = virtualizer.getVirtualItems();
-
-  const router = useRouter();
 
   return (
     <div
@@ -141,9 +138,6 @@ export function DataTable<TData extends { id: string }, TValue>({
                     key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
                     style={style}
-                    onClick={() =>
-                      router.push(`/orders?orderId=${row.original.id}`)
-                    }
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
