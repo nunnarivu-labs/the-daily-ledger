@@ -44,7 +44,7 @@ interface DataTableProps<TData, TValue> {
   onScrollBeyondIndex: (virtualIndexes: number[]) => void;
 }
 
-export function DataTable<TData extends { id: string }, TValue>({
+export function DataTable<TData, TValue>({
   columns,
   data,
   rowCount,
